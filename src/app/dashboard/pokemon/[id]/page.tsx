@@ -3,6 +3,17 @@ import {Metadata} from "next";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 
+
+export async function generateStaticParams() {
+
+	const pokemons151 = [...Array(151)].map((value, index) => `${index + 1}`);
+
+	return pokemons151.map(id => ({
+		id
+	}));
+}
+
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 	try {
@@ -30,7 +41,10 @@ const getPokemon = async(id: string): Promise<Pokemon> => {
 
 	try {
 		const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`, {
-			cache: 'force-cache'
+			//cache: 'force-cache',
+			next: {
+				revalidate: 60 * 60 * 30 * 6, // 24 hours
+			}
 		});
 		
 		if (!res.ok) {
