@@ -3,6 +3,12 @@ import {Metadata} from "next";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 
+export const metadata: Metadata = {
+	title: "Listado de Pokemons",
+	description: "Listado de pokemons con Next.js 13 y la PokeAPI"
+}
+
+
 interface Props {
 	params: Promise<{name: string}>;
 }
@@ -20,26 +26,6 @@ export async function generateStaticParams() {
 		name
 	}));
 
-}
-
-
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-
-	try {
-		const { name } = await params;
-
-		const pokemon = await getPokemon(name);
-
-		return {
-			title: `#${pokemon.id} - ${pokemon.name}`,
-			description: `Página del pokémon ${pokemon.name}`
-		}
-	} catch (error) {
-		return {
-			title: "Pokémon no encontrado",
-			description: "No se pudo encontrar el Pokémon solicitado"
-		}
-	}
 }
 
 const getPokemon = async(name: string): Promise<Pokemon> => {
